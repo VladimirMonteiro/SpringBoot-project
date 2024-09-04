@@ -1,5 +1,6 @@
 package com.outercode.api.resources.exceptions;
 
+import com.outercode.api.services.exceptions.DataIntegratyViolation;
 import com.outercode.api.services.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -17,4 +18,11 @@ public class ResourceExceptionHandler {
         StantardError error= new StantardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(DataIntegratyViolation.class)
+    public ResponseEntity<StantardError> DataIntegratyViolation(DataIntegratyViolation exception, HttpServletRequest request) {
+        StantardError error = new StantardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),exception.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }
