@@ -4,6 +4,7 @@ import com.outercode.api.domain.User;
 import com.outercode.api.domain.dto.UserDTO;
 import com.outercode.api.repositories.UserRepository;
 import com.outercode.api.services.UserService;
+import com.outercode.api.services.exceptions.DataIntegratyViolation;
 import com.outercode.api.services.exceptions.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,27 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User create(UserDTO obj) {
+        findByEmail(obj);
         return userRepository.save(mapper.map(obj, User.class));
+    }
+
+    @Override
+    public User update(UserDTO obj) {
+        findByEmail(obj);
+        return userRepository.save(mapper.map(obj, User.class));
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        user.orElseThrow(() -> new UserNotFoundException("User not found."));
+    }
+
+    private void findByEmail(UserDTO obj) {
+        Optional<User> user = userRepository.findByEmail(obj.getEmail());
+        if(user.isPresent() && !user.get().getId().equals(obj.getId())){
+            throw new DataIntegratyViolation("User already exists");
+        }
+
     }
 }
