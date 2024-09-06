@@ -26,6 +26,7 @@ class UserServiceImpTest {
     public static final String NAME = "Valdir";
     public static final String EMAIL = "Valdir@gmail.com";
     public static final String PASSWORD = "1234";
+
     @InjectMocks
     private UserServiceImp service;
 
@@ -168,6 +169,21 @@ class UserServiceImpTest {
         service.delete(ID);
 
         Mockito.verify(userRepository, Mockito.times(1)).deleteById(Mockito.anyInt());
+    }
+
+    @Test
+    void deleteWithUserNotFound() {
+        Mockito.when(userRepository.findById(Mockito.anyInt()))
+                .thenThrow(new UserNotFoundException("User not found"));
+
+        try {
+            service.delete(ID);
+        } catch (Exception exception) {
+            assertEquals(UserNotFoundException.class, exception.getClass());
+            assertEquals("User not found", exception.getMessage());
+        }
+
+
     }
 
     public void startUser() {
