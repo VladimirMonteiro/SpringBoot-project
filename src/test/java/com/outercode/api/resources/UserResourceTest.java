@@ -124,10 +124,21 @@ class UserResourceTest {
         assertEquals(ID, response.getBody().getId());
         assertEquals(NAME, response.getBody().getName());
         assertEquals(EMAIL, response.getBody().getEmail());
+    }
 
+    @Test
+    void whenDeleteThenReturnSuccess() {
+       Mockito.doNothing().when(service).delete(Mockito.anyInt());
 
+        ResponseEntity<UserDTO> response = resource.delete(ID);
+
+        Mockito.verify(service, Mockito.times(1));
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
     }
+
+
     public void startUser() {
         user = new User(ID, NAME, EMAIL, PASSWORD);
         userDTO = new UserDTO(ID, NAME, EMAIL, PASSWORD);
