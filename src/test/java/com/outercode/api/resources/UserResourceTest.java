@@ -95,17 +95,19 @@ class UserResourceTest {
 
     @Test
     void whenCreateThenReturnCreated() {
+        // Mockando o comportamento do serviço
         Mockito.when(service.create(Mockito.any())).thenReturn(user);
 
+        // Executando a ação
         ResponseEntity<UserDTO> response = resource.create(userDTO);
 
-        assertNotNull(response.getHeaders().get("Location"));
-        assertEquals(ResponseEntity.class, response.getClass());
-        assertEquals(201, response.getStatusCode().value());
+        // Verificações
+        assertNotNull(response.getHeaders().get("Location")); // Verifica se o cabeçalho "Location" está presente
+        assertEquals(ResponseEntity.class, response.getClass()); // Verifica se a resposta é do tipo ResponseEntity
+        assertEquals(201, response.getStatusCode().value()); // Verifica se o status retornado é 201
 
-
-
-
+        // Verificação adicional para garantir que o método create foi chamado corretamente
+        Mockito.verify(service, Mockito.times(1)).create(Mockito.any());
     }
 
     @Test
@@ -125,18 +127,24 @@ class UserResourceTest {
         assertEquals(NAME, response.getBody().getName());
         assertEquals(EMAIL, response.getBody().getEmail());
     }
-
     @Test
     void whenDeleteThenReturnSuccess() {
-       Mockito.doNothing().when(service).delete(Mockito.anyInt());
+        // Mockando o comportamento do método delete para não fazer nada
+        Mockito.doNothing().when(service).delete(Mockito.anyInt());
 
+        // Executando a ação de deletar
         ResponseEntity<UserDTO> response = resource.delete(ID);
 
-        Mockito.verify(service, Mockito.times(1));
-        assertEquals(ResponseEntity.class, response.getClass());
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        // Verificando se o método delete foi chamado exatamente uma vez
+        Mockito.verify(service, Mockito.times(1)).delete(Mockito.anyInt());
 
+        // Verificando a classe da resposta
+        assertEquals(ResponseEntity.class, response.getClass());
+
+        // Verificando o status de NO_CONTENT (204)
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
+
 
 
     public void startUser() {
