@@ -48,8 +48,8 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void delete(Integer id) {
-        Optional<User> user = userRepository.findById(id);
-        user.orElseThrow(() -> new UserNotFoundException("User not found."));
+        findById(id);
+        userRepository.deleteById(id);
     }
 
     private void findByEmail(UserDTO obj) {
@@ -59,4 +59,5 @@ public class UserServiceImp implements UserService {
         }
 
     }
+
 }
