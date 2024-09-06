@@ -18,14 +18,6 @@ class ResourceExceptionHandlerTest {
     @InjectMocks
     private ResourceExceptionHandler exceptionHandler;
 
-
-
-
-
-
-
-
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -44,8 +36,6 @@ class ResourceExceptionHandlerTest {
         assertEquals(StantardError.class, response.getBody().getClass());
         assertEquals("User not found", response.getBody().getError());
         assertEquals(404, response.getBody().getStatus());
-
-
     }
 
     @Test
