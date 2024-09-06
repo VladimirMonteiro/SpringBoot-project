@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -115,7 +114,7 @@ class UserServiceImpTest {
 
 
         try {
-            userOptional.get().setId(2)
+            userOptional.get().setId(2);
             service.create(userDTO);
         } catch (Exception exception) {
             assertEquals(DataIntegratyViolation.class, exception.getClass());
@@ -143,7 +142,32 @@ class UserServiceImpTest {
     }
 
     @Test
-    void delete() {
+    void whenUpdateThenReturnIntegratyViolationException() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+                .thenReturn(userOptional);
+
+
+        try {
+            userOptional.get().setId(2);
+            service.create(userDTO);
+        } catch (Exception exception) {
+            assertEquals(DataIntegratyViolation.class, exception.getClass());
+            assertEquals("User already exists", exception.getMessage());
+
+
+
+
+        }
+    }
+
+    @Test
+    void deleteWithSuccess() {
+        Mockito.when(userRepository.findById(Mockito.anyInt())).thenReturn(userOptional);
+        Mockito.doNothing().when(userRepository).deleteById(Mockito.anyInt());
+
+        service.delete(ID);
+
+        Mockito.verify(userRepository, Mockito.times(1)).deleteById(Mockito.anyInt());
     }
 
     public void startUser() {
