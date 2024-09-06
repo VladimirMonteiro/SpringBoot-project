@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -32,7 +33,7 @@ public class UserResource {
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll() {
         List<User> users = userService.findAll();
-        List<UserDTO> userDTOList = users.stream().map(x -> mapper.map(x, UserDTO.class)).toList();
+        List<UserDTO> userDTOList = users.stream().map(x -> mapper.map(x, UserDTO.class)).collect(Collectors.toList());
         return ResponseEntity.ok().body(userDTOList);
     }
 
